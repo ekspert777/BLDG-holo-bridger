@@ -61,9 +61,12 @@ class Bridger:
 
     def check_nft(self):
         if self.mode == 0 and self.chain != 'opti':
+            cc = {'avax':'avalanche',
+                  'polygon':'polygon',
+                  'bsc':'bsc'}
             api_key = self.moralisapi
             params = {
-                "chain": self.chain,
+                "chain": cc[self.chain],
                 "format": "decimal",
                 "token_addresses": [
                     self.BLDGAddress
