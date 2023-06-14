@@ -13,9 +13,9 @@ import random
 '''
 
 delay = (10, 600)
-mode = 1
-chain = ''        #   avax   /   bsc   /   polygon
-to = ''   # or random mode -  random.choice(['avax','polygon'])
+mode = 0
+chain = ''        #   avax   /   bsc   /   polygon  /  opti
+to = '', #random.choice(['avax','polygon'])
 api = ''
 
 info = {'avax':('https://snowtrace.io/tx/','https://rpc.ankr.com/avalanche'),
