@@ -31,10 +31,10 @@ class Bridger:
         self.privatekey = privatekey
         self.chain = chain
         self.to = to
-        self.w3 = Web3(Web3.HTTPProvider(info[self.chain][1]))
-        self.scan = info[self.chain][0]
-        self.account = self.w3.eth.account.from_key(self.privatekey)
-        self.address = self.account.address
+        self.w3 = ''
+        self.scan = ''
+        self.account = ''
+        self.address = ''
         self.mode = mode
         self.delay = delay
         self.moralisapi = api
@@ -60,7 +60,7 @@ class Bridger:
             time.sleep(1)
 
     def check_nft(self):
-        if self.mode == 0:
+        if self.mode == 0 and self.chain != 'opti':
             api_key = self.moralisapi
             params = {
                 "chain": self.chain,
@@ -78,6 +78,25 @@ class Bridger:
                     return id_
             except Exception as e:
                 return False
+
+        elif self.mode == 0 and self.chain == 'opti':
+            contract_abi = [{
+            "constant": True,
+            "inputs": [{"name": "_owner", "type": "address"}],
+            "name": "tokensOfOwner",
+            "outputs": [{"name": "tokenIds", "type": "uint256[]"}],
+            "payable": False,
+            "stateMutability": "view",
+            "type": "function"
+             }]
+            contract = self.w3.eth.contract(address=self.BLDGAddress, abi=contract_abi)
+            id_ = contract.functions.tokensOfOwner(self.address).call()[0]
+            if id_:
+                logger.success(f'{self.address} - BLDG {id_} nft founded on {self.chain}...')
+                return id_
+            else:
+                return False
+
 
         elif self.mode == 1:
             for chain in ['avalanche', 'polygon', 'bsc']:
@@ -109,6 +128,10 @@ class Bridger:
 
     def start(self):
         if self.mode == 0:
+            self.w3 = Web3(Web3.HTTPProvider(info[self.chain][1]))
+            self.scan = info[self.chain][0]
+            self.account = self.w3.eth.account.from_key(self.privatekey)
+            self.address = self.account.address
             data = self.check_nft()
             if data:
                 nft_id = data
@@ -116,11 +139,17 @@ class Bridger:
                 return self.address,'BLDG nft not in wallet'
 
         elif self.mode == 1:
+            self.w3 = Web3(Web3.HTTPProvider(info['bsc'][1]))
+            self.address = self.w3.eth.account.from_key(self.privatekey).address
             data = self.check_nft()
+
             if data:
                 chain,nft_id = data
                 self.chain = chain
                 self.w3 = Web3(Web3.HTTPProvider(info[self.chain][1]))
+                self.scan = info[self.chain][0]
+                self.account = self.w3.eth.account.from_key(self.privatekey)
+                self.address = self.account.address
                 if chain == self.to:
                     chains = ['avax', 'polygon', 'bsc']
                     chains.remove(self.to)
@@ -180,7 +209,7 @@ def main():
     res = {'address': wallets, 'result': results}
     df = pd.DataFrame(res)
     df.to_csv('results.csv', index=False)
-    logger.success('Bridgeing done...')
+    logger.success('Bridging done...')
     print(f'\n{" " * 32}creator - https://t.me/iliocka{" " * 32}\n')
     print(f'\n{" " * 32}donate - EVM 0xFD6594D11b13C6b1756E328cc13aC26742dBa868{" " * 32}\n')
     print(f'\n{" " * 32}donate - trc20 TMmL915TX2CAPkh9SgF31U4Trr32NStRBp{" " * 32}\n')
