@@ -83,20 +83,31 @@ class Bridger:
                 return False
 
         elif self.mode == 0 and self.chain == 'opti':
-            contract_abi = [{
-            "constant": True,
-            "inputs": [{"name": "_owner", "type": "address"}],
-            "name": "tokensOfOwner",
-            "outputs": [{"name": "tokenIds", "type": "uint256[]"}],
-            "payable": False,
-            "stateMutability": "view",
-            "type": "function"
-             }]
+            contract_abi = [
+                {
+                    "constant": True,
+                    "inputs": [{"name": "_owner", "type": "address"}],
+                    "name": "balanceOf",
+                    "outputs": [{"name": "balance", "type": "uint256"}],
+                    "payable": False,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": True,
+                    "inputs": [{"name": "_owner", "type": "address"}],
+                    "name": "tokensOfOwner",
+                    "outputs": [{"name": "tokenIds", "type": "uint256[]"}],
+                    "payable": False,
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]
             contract = self.w3.eth.contract(address=self.BLDGAddress, abi=contract_abi)
-            id_ = contract.functions.tokensOfOwner(self.address).call()[0]
-            if id_:
+            bal = contract.functions.balanceOf(wallet).call()
+            if bal:
                 logger.success(f'{self.address} - BLDG {id_} nft founded on {self.chain}...')
-                return id_
+                return contract.functions.tokensOfOwner(self.address).call()[0]
             else:
                 return False
 
