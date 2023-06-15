@@ -10,12 +10,13 @@ import random
      chain - from chain
      to - to chain (or random mode - random.choice(['your chain','your chain']) 
      api - need moralis api https://admin.moralis.io/settings#secret-keys
+     
 '''
 
 delay = (10, 600)
 mode = 0
 chain = ''        #   avax   /   bsc   /   polygon  /  opti
-to = ''  #random.choice(['avax','polygon'])
+to = ''  #or ['your chain','your chain']
 api = ''
 
 info = {'avax':('https://snowtrace.io/tx/','https://rpc.ankr.com/avalanche'),
