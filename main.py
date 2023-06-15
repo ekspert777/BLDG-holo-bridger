@@ -218,8 +218,8 @@ def main():
         keys = [row.strip() for row in f]
         random.shuffle(keys)
     for key in keys:
-        to = random.choice(to) if type(to) == list else to
-        holo = Bridger(key,chain,to,delay,api,mode)
+        to_chain = random.choice(to) if type(to) == list else to
+        holo = Bridger(key,chain,to_chain,delay,api,mode)
         res = holo.start()
         wallets.append(res[0]), results.append(res[1])
 
