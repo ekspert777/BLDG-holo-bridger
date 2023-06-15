@@ -8,7 +8,7 @@ import random
      avax   /   bsc   /   polygon
 
      chain - from chain
-     to - to chain (or random mode - random.choice(['your chain','your chain']) 
+     to - to chain (or random mode - ['your chain','your chain'] ) 
      api - need moralis api https://admin.moralis.io/settings#secret-keys
      
 '''
