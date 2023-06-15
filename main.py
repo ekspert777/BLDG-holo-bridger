@@ -104,10 +104,11 @@ class Bridger:
                 }
             ]
             contract = self.w3.eth.contract(address=self.BLDGAddress, abi=contract_abi)
-            bal = contract.functions.balanceOf(wallet).call()
+            bal = contract.functions.balanceOf(self.address).call()
             if bal:
+                id_ = contract.functions.tokensOfOwner(self.address).call()[0]
                 logger.success(f'{self.address} - BLDG {id_} nft founded on {self.chain}...')
-                return contract.functions.tokensOfOwner(self.address).call()[0]
+                return id_
             else:
                 return False
 
