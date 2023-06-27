@@ -180,7 +180,7 @@ class Bridger:
         lzEndpoint = self.w3.eth.contract(address=self.LzEndAddress, abi=lzEndpointABI)
 
         lzFee = lzEndpoint.functions.estimateFees(Lz_ids[self.to],self.HolographBridgeAddress,'0x',False,'0x').call()[0]
-        lzFee = int(lzFee * 2.5)
+        lzFee = int(lzFee * 3)
         to = holograph_ids[self.to]
 
         while True:
